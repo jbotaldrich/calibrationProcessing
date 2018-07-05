@@ -120,7 +120,7 @@ function someFigure = plotAllLines(wavenumbers, dataLabel, intensityArray)
     labels = [];
     for i = 1:size(intensityArray, 2)
         plot(wavenumbers, intensityArray(:,i), 'Linewidth', 2.0);
-        labels = [labels, dataLabel(i).name];
+        labels = [labels, {dataLabel(i).name}];
     end
     xlim([906 1135]);
     xlabel('Raman Shift');
