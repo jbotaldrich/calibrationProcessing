@@ -42,9 +42,20 @@ plotAllLines(waveNumbers, files, intensitiesWithBackgroundRemoved);
 peakRatio = getPeakRatio([955 975], [1070 1100], waveNumbers, intensitiesWithBackgroundRemoved);
 concentration = getConcentrationsFromFile(files);
 
+categories = unique(concentration);
+meanArray = [];  % <<< this will have your mean values.
+for i in 1:size(categories);
+    meanArray = [meanArray, mean(peakRatio(:, concentration==categories(i)),2)];
+end
+
+
 figure();
 % Scatter plot of the concentration vs peakRatio.
 scatter(concentration, peakRatio);
+hold on;
+fit = polyfit(concentration, peakRatio, 1);
+plot(polyval(fit, concentration));
+hold off;
 
 % Parses the filename to pull out the concentration value.  Probably a more elegant way to do this.
 function concentrations = getConcentrationsFromFile(files)
