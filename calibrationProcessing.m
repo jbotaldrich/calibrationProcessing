@@ -124,7 +124,7 @@ function someFigure = plotAllLines(wavenumbers, dataLabel, intensityArray)
     end
     xlim([906 1135]);
     xlabel('Raman Shift');
-    legend(cellstr(labels));
+    legend(labels);
     title('Calibration for Calc');
     hold off
 end
