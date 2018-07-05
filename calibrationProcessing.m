@@ -62,8 +62,10 @@ end
 function peakRatios = getPeakRatio(firstPeakWaveNumberRange, secondPeakWaveNumberRange, wavenumbers, intensityArray)
     [~, wavenumberTargetOneIndexStart] = min(abs(wavenumbers - firstPeakWaveNumberRange(1)));
     [~, wavenumberTargetOneIndexEnd] = min(abs(wavenumbers - firstPeakWaveNumberRange(2)));
+    [wavenumberTargetOneIndexStart, wavenumberTargetOneIndexEnd] = setBounds(wavenumberTargetOneIndexStart, wavenumberTargetOneIndexEnd);
     [~, wavenumberTargetTwoIndexStart] = min(abs(wavenumbers - secondPeakWaveNumberRange(1)));
     [~, wavenumberTargetTwoIndexEnd] = min(abs(wavenumbers - secondPeakWaveNumberRange(2)));
+    [wavenumberTargetTwoIndexStart, wavenumberTargetTwoIndexEnd] = setBounds(wavenumberTargetTwoIndexStart, wavenumberTargetTwoIndexEnd);
     peakRatios = [];
     for i = 1:size(intensityArray, 2)
         peakOneIntensity = max(intensityArray(wavenumberTargetOneIndexStart:wavenumberTargetOneIndexEnd, i));
@@ -95,7 +97,7 @@ end
 function wavenumbers = getWavenumbers(numberOfSteps, stepSize, startStage, calibrationCurve)
     endStage = startStage + stepSize * numberOfSteps;
     stageRange = linspace(startStage, endStage, numberOfSteps);
-    wavenumbers = fliplr(calibrationCurve(1) * stageRange + calibrationCurve(2));
+    wavenumbers = calibrationCurve(1) * stageRange + calibrationCurve(2);
 end
 
 % Subtract background expects 
@@ -105,11 +107,21 @@ end
 function backgroundSubtracted = removeBackground(removalRange, wavenumbers, intensityArray)
     [~, wavenumberIndexStart] = min(abs(wavenumbers - removalRange(1)));
     [~, wavenumberIndexEnd] = min(abs(wavenumbers - removalRange(2)));
+    [wavenumberIndexStart, wavenumberIndexEnd] = setBounds(wavenumberIndexStart, wavenumberIndexEnd);
     backgroundSubtracted = [];
     for i = 1:size(intensityArray, 2)
         valuesTested = intensityArray(wavenumberIndexStart:wavenumberIndexEnd, i);
         minIntensity = min(intensityArray(wavenumberIndexStart:wavenumberIndexEnd, i));
         backgroundSubtracted = [backgroundSubtracted intensityArray(:,i)-minIntensity];
+    end
+end
+
+function [outStartIndex, outEndIndex] = setBounds(startIndex, endIndex)
+    outStartIndex = startIndex;
+    outEndIndex = endIndex;
+    if startIndex > endIndex
+        outStartIndex = endIndex
+        outEndIndex = startIndex
     end
 end
 
