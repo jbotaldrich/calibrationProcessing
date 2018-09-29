@@ -52,6 +52,8 @@ end
 figure();
 % Scatter plot of the concentration vs peakRatio.
 scatter(concentration, peakRatio);
+scatterLabels = getLabels(files)
+lenged scatterLabels
 hold on;
 fit = polyfit(concentration, peakRatio, 1);
 plot(polyval(fit, concentration));
@@ -133,6 +135,14 @@ function [outStartIndex, outEndIndex] = setBounds(startIndex, endIndex)
     if startIndex > endIndex
         outStartIndex = endIndex
         outEndIndex = startIndex
+    end
+end
+
+%Generates plot labels from files
+function plotLabels = getLabels(dataLabel)
+    labels = []
+    for i = 1:size(dataLabel)
+        plotLabels = [labels, {dataLabel(i).name}]
     end
 end
 
