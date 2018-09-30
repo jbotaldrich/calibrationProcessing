@@ -44,7 +44,7 @@ concentration = getConcentrationsFromFile(files);
 
 categories = unique(concentration);
 meanArray = [];  % <<< this will have your mean values.
-for i in 1:size(categories);
+for i = 1:size(categories);
     meanArray = [meanArray, mean(peakRatio(:, concentration==categories(i)),2)];
 end
 
@@ -52,8 +52,8 @@ end
 figure();
 % Scatter plot of the concentration vs peakRatio.
 scatter(concentration, peakRatio);
-scatterLabels = getLabels(files)
-lenged scatterLabels
+scatterLabels = getLabels(files, initialIntensities)
+legend(scatterLabels)
 hold on;
 fit = polyfit(concentration, peakRatio, 1);
 plot(polyval(fit, concentration));
@@ -139,9 +139,9 @@ function [outStartIndex, outEndIndex] = setBounds(startIndex, endIndex)
 end
 
 %Generates plot labels from files
-function plotLabels = getLabels(dataLabel)
+function plotLabels = getLabels(dataLabel, intensityArray)
     labels = []
-    for i = 1:size(dataLabel)
+    for i = 1:size(intensityArray, 2)
         plotLabels = [labels, {dataLabel(i).name}]
     end
 end
